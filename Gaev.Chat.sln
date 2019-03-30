@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaev.Chat", "Gaev.Chat\Gaev.Chat.csproj", "{D642A26E-C1AD-4203-9DFC-E0FA9493E36C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D642A26E-C1AD-4203-9DFC-E0FA9493E36C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D642A26E-C1AD-4203-9DFC-E0FA9493E36C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D642A26E-C1AD-4203-9DFC-E0FA9493E36C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D642A26E-C1AD-4203-9DFC-E0FA9493E36C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

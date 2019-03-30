@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+</head>
+<body>
+
+<script>
+
+    function run() {
+        var roomId = "123";
+        var roomMessageContainer = document.querySelector(".room-messages");
+        var server = new EventSource("/api/rooms/" + roomId);
+
+        server.addEventListener("message", function (e) {
+            //var json = JSON.parse(e.data);
+            console.log("message", e.data);
+            var messageElement = document.createElement('div');
+            messageElement.classList.add("message");
+            messageElement.innerText = e.data;
+            roomMessageContainer.append(messageElement);
+        });
+
+        function post(url, data, callback) {
+            var req = new XMLHttpRequest();
+            if (callback)
+                req.onreadystatechange = callback;
+            req.open('POST', url);
+            req.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+            req.send(JSON.stringify(data));
+        }
+
+        var messageForm = document.querySelector('.message-form');
+        var messageInput = document.querySelector('.message');
+        messageForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            post('/api/rooms/' + roomId + '/messages/', messageInput.value);
+            messageInput.value = '';
+        });
+
+    }
+
+    document.addEventListener('DOMContentLoaded', run);
+
+</script>
+<div class="room-messages">
+
+</div>
+<form class="message-form">
+    <input type="text" class="message"/>
+    <button type="submit">Send</button>
+</form>
+</body>
+</html>
