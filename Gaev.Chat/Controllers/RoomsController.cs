@@ -12,19 +12,23 @@ namespace Gaev.Chat.Controllers
     [Route("api/rooms")]
     public class RoomsController : ControllerBase
     {
-        private static readonly ConcurrentDictionary<string, List<StreamWriter>> RoomClients =
+        private static readonly ConcurrentDictionary<string, List<StreamWriter>> RoomMembers =
             new ConcurrentDictionary<string, List<StreamWriter>>();
 
         // GET api/rooms/5
-        [HttpGet("{id}")]
-        public async Task ListenToMessages(string id)
+        [HttpGet("{room}")]
+        public async Task ListenToMessages(string room)
         {
+            Response.Headers["Cache-Control"] = "no-cache"; // https://serverfault.com/a/801629
+            Response.Headers["X-Accel-Buffering"] = "no";
             Response.ContentType = "text/event-stream";
-            using (var client = new StreamWriter(Response.Body))
+            using (var member = new StreamWriter(Response.Body))
             {
-                var clients = RoomClients.GetOrAdd(id, _ => new List<StreamWriter>(4));
-                lock (clients)
-                    clients.Add(client);
+                var members = RoomMembers.GetOrAdd(room, _ => new List<StreamWriter>(4));
+                lock (members)
+                    members.Add(member);
+                await member.WriteAsync("event: connected\ndata:\n\n");
+                await member.FlushAsync();
 
                 try
                 {
@@ -34,36 +38,36 @@ namespace Gaev.Chat.Controllers
                 {
                 }
 
-                lock (clients)
-                    clients.Remove(client);
+                lock (members)
+                    members.Remove(member);
             }
         }
 
         // POST api/rooms/5/messages
-        [HttpPost("{id}/messages")]
-        public async Task SendMessage(string id, [FromBody] string message)
+        [HttpPost("{room}/messages")]
+        public async Task SendMessage(string room, [FromBody] string message)
         {
-            if (!RoomClients.TryGetValue(id, out var clients))
+            if (!RoomMembers.TryGetValue(room, out var members))
                 return;
 
-            lock (clients)
-                clients = clients.ToList(); // copy to be thread safe
+            lock (members)
+                members = members.ToList(); // copy to be thread safe
 
-            async Task Send(StreamWriter client)
+            async Task Send(StreamWriter member)
             {
                 try
                 {
-                    await client.WriteAsync("data: " + message + "\n\n");
-                    await client.FlushAsync();
+                    await member.WriteAsync("data: " + message + "\n\n");
+                    await member.FlushAsync();
                 }
                 catch (ObjectDisposedException)
                 {
-                    lock (clients)
-                        clients.Remove(client);
+                    lock (members)
+                        members.Remove(member);
                 }
             }
 
-            await Task.WhenAll(clients.Select(Send));
+            await Task.WhenAll(members.Select(Send));
         }
     }
 }

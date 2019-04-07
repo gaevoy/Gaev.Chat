@@ -2,54 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Chat</title>
+    <link rel="stylesheet" href="main.css">
+    <script src="main.js"></script>
 </head>
 <body>
-
 <script>
-
-    function run() {
-        var roomId = "123";
-        var roomMessageContainer = document.querySelector(".room-messages");
-        var server = new EventSource("/api/rooms/" + roomId);
-
-        server.addEventListener("message", function (e) {
-            //var json = JSON.parse(e.data);
-            console.log("message", e.data);
-            var messageElement = document.createElement('div');
-            messageElement.classList.add("message");
-            messageElement.innerText = e.data;
-            roomMessageContainer.append(messageElement);
-        });
-
-        function post(url, data, callback) {
-            var req = new XMLHttpRequest();
-            if (callback)
-                req.onreadystatechange = callback;
-            req.open('POST', url);
-            req.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-            req.send(JSON.stringify(data));
-        }
-
-        var messageForm = document.querySelector('.message-form');
-        var messageInput = document.querySelector('.message');
-        messageForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            post('/api/rooms/' + roomId + '/messages/', messageInput.value);
-            messageInput.value = '';
-        });
-
-    }
-
-    document.addEventListener('DOMContentLoaded', run);
-
+    window.addEventListener("hashchange", () => window.location.reload());
+    document.addEventListener('DOMContentLoaded', () =>
+        enterChat(joinChat));
 </script>
-<div class="room-messages">
-
-</div>
-<form class="message-form">
-    <input type="text" class="message"/>
-    <button type="submit">Send</button>
-</form>
+<section class="lobby">
+    <h1>Minimalist Chat</h1>
+    <p>Put room number you want to enter and nickname so the rest participant can understand who you are.</p>
+    <form class="join-form">
+        <label>Room number <input type="text" class="room" autofocus/></label>
+        <label>Nickname <input type="text" class="nickname"/></label>
+        <button type="submit">Join</button>
+    </form>
+</section>
+<section class="chat hidden">
+    <div class="logs"></div>
+    <form class="new-message-form">
+        <input type="text" class="new-message" placeholder="Write a message..."/>
+        <button type="submit">Send</button>
+    </form>
+</section>
 </body>
 </html>

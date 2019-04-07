@@ -1,0 +1,93 @@
+* {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+html, body, .chat {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body, input, button {
+    font-family: monospace;
+    font-size: 16px;
+    line-height: 20px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+}
+
+.hidden {
+    display: none;
+}
+
+.lobby {
+    text-align: center;
+    padding-top: 10%;
+}
+
+.lobby input {
+    border: 1px solid lightgray;
+    height: 50px;
+    padding: 0 10px;
+    width: 140px;
+    margin-right: 15px;
+    text-align: center;
+}
+
+.logs {
+    height: calc(100% - 50px);
+    overflow: auto;
+}
+
+.logs .message {
+    padding: 5px 10px;
+}
+
+.logs .message:hover {
+    background-color: #fafafa;
+}
+
+.logs .message .from {
+    font-weight: bold;
+}
+
+.new-message-form {
+    height: 50px;
+    position: relative;
+    border-top: 1px solid lightgray;
+    background-color: #fafafa;
+}
+
+.new-message-form .new-message {
+    position: absolute;
+    left: 0;
+    width: calc(100% - 100px);
+    height: 100%;
+    padding: 0 10px;
+}
+
+.new-message-form button {
+    position: absolute;
+    right: 0;
+    width: 100px;
+    height: 100%;
+}
+
+@media (max-width: 641px) {
+    body, input, button {
+        font-size: 20px;
+        line-height: 24px;
+    }
+
+    .lobby {
+        padding-top: 0;
+    }
+
+    .join-form label, .join-form button {
+        display: block;
+        margin: 5px auto;
+    }
+}
