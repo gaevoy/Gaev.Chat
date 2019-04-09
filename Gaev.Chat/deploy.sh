@@ -1,27 +1,27 @@
 #!/bin/bash
 ssh root@app.gaevoy.com 'bash -s' <<'ENDSSH'
 printf "Stopping service...\n"
-systemctl stop GaevChat
+systemctl stop GaevCryptoChat
 printf "Service is "
-systemctl is-active GaevChat
-mkdir -p /apps/GaevChat
+systemctl is-active GaevCryptoChat
+mkdir -p /apps/GaevCryptoChat
 ENDSSH
 
 printf "Uploading new version of service...\n"
-rsync -v -a ./bin/Release/netcoreapp2.2/ubuntu.16.04-x64/publish/ root@app.gaevoy.com:/apps/GaevChat/
+rsync -v -a ./bin/Release/netcoreapp2.2/ubuntu.16.04-x64/publish/ root@app.gaevoy.com:/apps/GaevCryptoChat/
 
 ssh root@app.gaevoy.com 'bash -s' <<'ENDSSH'
-chmod 777 /apps/GaevChat/Gaev.Chat
-if [[ ! -e /etc/systemd/system/GaevChat.service ]]; then
+chmod 777 /apps/GaevCryptoChat/Gaev.Chat
+if [[ ! -e /etc/systemd/system/GaevCryptoChat.service ]]; then
     printf "Installing service...\n"
-    cat > /etc/systemd/system/GaevChat.service <<'EOF'
+    cat > /etc/systemd/system/GaevCryptoChat.service <<'EOF'
     [Unit]
-    Description=GaevChat
+    Description=GaevCryptoChat
     After=network.target
     
     [Service]
-    WorkingDirectory=/apps/GaevChat
-    ExecStart=/apps/GaevChat/Gaev.Chat
+    WorkingDirectory=/apps/GaevCryptoChat
+    ExecStart=/apps/GaevCryptoChat/Gaev.Chat
     Restart=always
     KillSignal=SIGINT
     
@@ -29,10 +29,10 @@ if [[ ! -e /etc/systemd/system/GaevChat.service ]]; then
     WantedBy=multi-user.target
 EOF
     systemctl daemon-reload
-    systemctl enable GaevChat
+    systemctl enable GaevCryptoChat
 fi
 printf "Starting service...\n"
-systemctl start GaevChat
+systemctl start GaevCryptoChat
 printf "Service is "
-systemctl is-active GaevChat
+systemctl is-active GaevCryptoChat
 ENDSSH

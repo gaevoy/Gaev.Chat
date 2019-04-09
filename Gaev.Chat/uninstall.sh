@@ -1,9 +1,9 @@
 #!/bin/bash
 ssh root@app.gaevoy.com 'bash -s' <<'ENDSSH'
-systemctl stop GaevChat
-systemctl disable GaevChat 
-rm /etc/systemd/system/GaevChat.service 
+systemctl stop GaevCryptoChat
+systemctl disable GaevCryptoChat 
+rm /etc/systemd/system/GaevCryptoChat.service 
 systemctl daemon-reload
 systemctl reset-failed
-rm -rf /apps/GaevChat
+rm -rf /apps/GaevCryptoChat
 ENDSSH
