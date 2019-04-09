@@ -1,5 +1,5 @@
 #!/bin/bash
-ssh root@192.168.2.4 'bash -s' <<'ENDSSH'
+ssh root@app.gaevoy.com 'bash -s' <<'ENDSSH'
 systemctl stop GaevChat
 systemctl disable GaevChat 
 rm /etc/systemd/system/GaevChat.service 

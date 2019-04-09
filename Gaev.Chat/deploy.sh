@@ -1,5 +1,5 @@
 #!/bin/bash
-ssh root@192.168.2.4 'bash -s' <<'ENDSSH'
+ssh root@app.gaevoy.com 'bash -s' <<'ENDSSH'
 printf "Stopping service...\n"
 systemctl stop GaevChat
 printf "Service is "
@@ -8,9 +8,9 @@ mkdir -p /apps/GaevChat
 ENDSSH
 
 printf "Uploading new version of service...\n"
-rsync -v -a ./bin/Release/netcoreapp2.2/ubuntu.16.04-x64/publish/ root@192.168.2.4:/apps/GaevChat/
+rsync -v -a ./bin/Release/netcoreapp2.2/ubuntu.16.04-x64/publish/ root@app.gaevoy.com:/apps/GaevChat/
 
-ssh root@192.168.2.4 'bash -s' <<'ENDSSH'
+ssh root@app.gaevoy.com 'bash -s' <<'ENDSSH'
 chmod 777 /apps/GaevChat/Gaev.Chat
 if [[ ! -e /etc/systemd/system/GaevChat.service ]]; then
     printf "Installing service...\n"
