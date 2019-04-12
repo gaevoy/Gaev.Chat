@@ -12,7 +12,7 @@ function enterChat(onDone) {
         evt.preventDefault();
         room = roomInput.value;
         nickname = nicknameInput.value;
-        if (room && room.length && nickname && nicknameInput.value) {
+        if (room.length && nickname.length) {
             document.querySelector('.lobby').classList.add('hidden');
             window.history.pushState(null, null, '#room/' + window.encodeURI(room));
             onDone(room, nickname);
