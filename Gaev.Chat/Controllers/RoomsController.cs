@@ -50,8 +50,7 @@ namespace Gaev.Chat.Controllers
             if (!RoomMembers.TryGetValue(room, out var members))
                 return;
 
-            lock (members)
-                members = members.ToList(); // copy to be thread safe
+            members = SafeCopy(members);
 
             async Task Send(StreamWriter member)
             {
@@ -68,6 +67,16 @@ namespace Gaev.Chat.Controllers
             }
 
             await Task.WhenAll(members.Select(Send));
+        }
+
+        private List<StreamWriter> SafeCopy(List<StreamWriter> members)
+        {
+            // Members of the same room share the same instance of `members` variable.
+            // Hence, the variable reads and writes by multiple threads.
+            // However, `List<T>` is not thread-safe, see https://stackoverflow.com/a/25419149/1400547.
+            // The list of members must be copied so we can enumerate without getting this error https://stackoverflow.com/a/604843/1400547
+            lock (members)
+                return members.ToList();
         }
     }
 }
